@@ -1,5 +1,6 @@
 package be.kdg.int5;
 
+import be.kdg.int5.domain.GameContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,5 +55,26 @@ class GameSDKIntegrationTest {
         assertFalse(sdk.bearerToken().isEmpty());
 
         System.out.println("Token: "+sdk.bearerToken());
+    }
+
+    @Test
+    void registerGameShouldCreateGameAndReturnGameContext() {
+        //Arrange
+        GameSDK sdk = new GameSDK.Builder().init("band1TBBB");
+
+        //Act
+        GameContext ctx = sdk.registerGame(
+                "Duck!",
+                "http://localhost:4242/duckgame",
+                "Duck! is the world class duck game where you must duck.",
+                null,
+                "http://localhost:4242/assets/duckgame/icon.svg",
+                "http://localhost:4242/assets/duckgame/cover.png"
+        );
+
+        //Assert
+        assertNotNull(ctx.gameId());
+
+        System.out.println("GameId: "+ctx.gameId());
     }
 }

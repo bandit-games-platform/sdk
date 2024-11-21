@@ -1,7 +1,9 @@
 package be.kdg.int5;
 
+import be.kdg.int5.domain.GameContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.math.BigDecimal;
 import java.net.http.HttpClient;
 import java.time.Instant;
 import java.util.Objects;
@@ -38,6 +40,25 @@ public class GameSDK {
     public String bearerToken() {
         if (bearerToken == null || isTokenExpired()) authenticate();
         return bearerToken;
+    }
+
+    public GameContext registerGame(
+            String title,
+            String hostUrl,
+            String description,
+            BigDecimal price,
+            String iconUrl,
+            String backgroundUrl
+    ) {
+        return RegisterGameModule.registerGame(
+                this,
+                title,
+                hostUrl,
+                description,
+                price,
+                iconUrl,
+                backgroundUrl
+        );
     }
 
 
@@ -81,11 +102,21 @@ public class GameSDK {
         }
     }
 
+
     public static class AuthenticationFailedException extends RuntimeException {
         public AuthenticationFailedException() {
         }
 
         public AuthenticationFailedException(String message) {
+            super(message);
+        }
+    }
+
+    public static class GeneralMethodFailedException extends RuntimeException {
+        public GeneralMethodFailedException() {
+        }
+
+        public GeneralMethodFailedException(String message) {
             super(message);
         }
     }
