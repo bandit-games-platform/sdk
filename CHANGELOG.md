@@ -5,6 +5,7 @@ Each change should be sorted in to one of the following categories:
 
 ## [Unreleased]
 ### Added
+- registerGame sdk method (without any collections)
 - authentication using api key to the GameSDK
 - GameSDK.Builder to build a new GameSDK object
 ### Changed
