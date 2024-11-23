@@ -6,6 +6,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameSDKIntegrationTest {
@@ -47,7 +50,7 @@ class GameSDKIntegrationTest {
         // The backend database already contains a valid api key: band1TBBB
 
         //Act
-        GameSDK sdk = new GameSDK.Builder().init("band1TBBB");
+        GameSDK sdk = new GameSDK.Builder().init("band1TCCC");
 
         //Assert
         assertFalse(sdk.isTokenExpired());
@@ -76,5 +79,34 @@ class GameSDKIntegrationTest {
         assertNotNull(ctx.gameId());
 
         System.out.println("GameId: "+ctx.gameId());
+    }
+
+    @Test
+    void addingSessionForPlayerForGameShouldSucceed() {
+        //Arrange
+        GameSDK sdk = new GameSDK.Builder().init("band1TCCC");
+        GameContext ctx = new GameContext(UUID.fromString("d77e1d1f-6b46-4c89-9290-3b9cf8a7c001"));
+        LocalDateTime startTime = LocalDateTime.now().minusHours(2);
+        LocalDateTime endTime = LocalDateTime.now().minusMinutes(20);
+
+        //Act
+        boolean added = sdk.submitCompletedSession(
+                ctx,
+                UUID.fromString("94dad160-f5c8-4817-8f2d-611e1436ffcd"),
+                startTime,
+                endTime,
+                GameSDK.EndState.WIN,
+                20,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        //Assert
+        assertNotNull(ctx.gameId());
+        assertTrue(added);
     }
 }

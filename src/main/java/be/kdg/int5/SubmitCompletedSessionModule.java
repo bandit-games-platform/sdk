@@ -32,7 +32,7 @@ public class SubmitCompletedSessionModule {
                 "startTime": "%s",
                 "endTime": "%s",
                 "endState": "%s",
-                "turnsTaken": %s",
+                "turnsTaken": "%s",
                 "avgSecondsPerTurn": "%s",
                 "playerScore": "%s",
                 "opponentScore": "%s",
