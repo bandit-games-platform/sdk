@@ -96,6 +96,21 @@ public class GameSDK {
         );
     }
 
+    public boolean updateAchievementProgress(
+            GameContext ctx,
+            UUID playerId,
+            UUID achievementId,
+            Integer newProgressAmount
+    ) {
+        return UpdateAchievementProgressModule.updateAchievementProgress(
+                this,
+                ctx,
+                playerId,
+                achievementId,
+                newProgressAmount
+        );
+    }
+
 
     public static class Builder {
         private String gameRegistryBaseUrl = "http://localhost:8090/api";

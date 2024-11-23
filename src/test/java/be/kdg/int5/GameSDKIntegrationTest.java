@@ -109,4 +109,40 @@ class GameSDKIntegrationTest {
         assertNotNull(ctx.gameId());
         assertTrue(added);
     }
+
+    @Test
+    void updatingAchievementProgressForPlayerForGameShouldSucceedWithNoProgressAmount() {
+        //Arrange
+        GameSDK sdk = new GameSDK.Builder().init("band1TCCC");
+        GameContext ctx = new GameContext(UUID.fromString("d77e1d1f-6b46-4c89-9290-3b9cf8a7c001"));
+
+        //Act
+        boolean updated = sdk.updateAchievementProgress(
+                ctx,
+                UUID.fromString("94dad160-f5c8-4817-8f2d-611e1436ffcd"),
+                UUID.fromString("123e4567-e89b-12d3-a456-426614174001"),
+                null
+        );
+
+        //Assert
+        assertTrue(updated);
+    }
+
+    @Test
+    void updatingAchievementProgressForPlayerForGameShouldSucceedWithSetProgressAmount() {
+        //Arrange
+        GameSDK sdk = new GameSDK.Builder().init("band1TCCC");
+        GameContext ctx = new GameContext(UUID.fromString("d77e1d1f-6b46-4c89-9290-3b9cf8a7c001"));
+
+        //Act
+        boolean updated = sdk.updateAchievementProgress(
+                ctx,
+                UUID.fromString("94dad160-f5c8-4817-8f2d-611e1436ffcd"),
+                UUID.fromString("123e4567-e89b-12d3-a456-426614174002"),
+                10
+        );
+
+        //Assert
+        assertTrue(updated);
+    }
 }
