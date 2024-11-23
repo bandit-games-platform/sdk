@@ -1,12 +1,15 @@
 package be.kdg.int5;
 
+import be.kdg.int5.domain.Achievement;
 import be.kdg.int5.domain.GameContext;
+import be.kdg.int5.domain.Rule;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -19,18 +22,52 @@ class RegisterGameModule {
             String description,
             BigDecimal price,
             String iconUrl,
-            String backgroundUrl
+            String backgroundUrl,
+            List<Rule> rules,
+            List<String> screenshots,
+            List<Achievement> achievements
     ) {
         String json = "{";
-        json += "\"title\": \""+Objects.requireNonNull(title)+"\",";
-        json += "\"currentHost\": \""+Objects.requireNonNull(hostUrl)+"\",";
+        json += "\"title\": \""+Objects.requireNonNull(title)+"\"";
+        json += ", \"currentHost\": \""+Objects.requireNonNull(hostUrl)+"\"";
 
-        if(description != null) json += "\"description\": \""+description+"\",";
-        if(price != null) json += "\"currentPrice\": "+price.doubleValue()+",";
-        if(iconUrl != null) json += "\"iconUrl\": \""+iconUrl+"\",";
-        if(backgroundUrl != null) json += "\"backgroundUrl\": \""+backgroundUrl+"\",";
+        if(description != null) json += ", \"description\": \""+description+"\"";
+        if(price != null) json += ", \"currentPrice\": "+price.doubleValue();
+        if(iconUrl != null) json += ", \"iconUrl\": \""+iconUrl+"\"";
+        if(backgroundUrl != null) json += ", \"backgroundUrl\": \""+backgroundUrl+"\"";
 
-        json += "\"rules\": []";
+        boolean firstElement;
+
+        if (rules != null) {
+            json += ", \"rules\": [";
+            firstElement = true;
+            for (Rule r : rules) {
+                if (firstElement) firstElement = false; else json += ",";
+                json += r.toJson();
+            }
+            json += "]";
+        }
+
+        if (screenshots != null) {
+            json += ", \"screenshots\": [";
+            firstElement = true;
+            for (String screenshotUrl : screenshots) {
+                if (firstElement) firstElement = false; else json += ",";
+                json += "\""+screenshotUrl+"\"";
+            }
+            json += "]";
+        }
+
+        if (achievements != null) {
+            json += ", \"achievements\": [";
+            firstElement = true;
+            for (Achievement a : achievements) {
+                if (firstElement) firstElement = false; else json += ",";
+                json += a.toJson();
+            }
+            json += "]";
+        }
+
         json += "}";
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -55,7 +92,7 @@ class RegisterGameModule {
 
             return new GameContext(UUID.fromString((String) jsonMap.get("uuid")));
         }catch (IOException | InterruptedException e) {
-            throw new GameSDK.AuthenticationFailedException(e.getMessage());
+            throw new GameSDK.GeneralMethodFailedException(e.getMessage());
         }
     }
 }
