@@ -38,7 +38,7 @@ class RegisterGameModule {
                 .setHeader("Authorization", "Bearer "+sdk.bearerToken())
                 .setHeader("Content-Type", "application/json")
                 .setHeader("Accept", "application/json")
-                .uri(URI.create(sdk.baseUrl+"/registry/games"))
+                .uri(URI.create(sdk.gameRegistryBaseUrl+"/registry/games"))
                 .build();
         try {
             HttpResponse<String> response = sdk.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
