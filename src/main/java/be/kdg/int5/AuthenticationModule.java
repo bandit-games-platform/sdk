@@ -15,7 +15,7 @@ class AuthenticationModule {
                 .POST(HttpRequest.BodyPublishers.ofString("{\"apiKey\":\""+sdk.apiKey+"\"}"))
                 .setHeader("Content-Type", "application/json")
                 .setHeader("Accept", "application/json")
-                .uri(URI.create(sdk.baseUrl+"/registry/auth"))
+                .uri(URI.create(sdk.gameRegistryBaseUrl+"/registry/auth"))
                 .build();
         try {
             HttpResponse<String> response = sdk.httpClient.send(request, HttpResponse.BodyHandlers.ofString());

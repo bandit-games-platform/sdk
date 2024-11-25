@@ -8,12 +8,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.net.http.HttpClient;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class GameSDK {
     protected final String apiKey;
-    protected final String baseUrl;
+    protected final String gameRegistryBaseUrl;
+    protected final String statisticsBaseUrl;
     protected final int tokenExpirationMargin;
 
     protected final HttpClient httpClient;
@@ -23,7 +26,8 @@ public class GameSDK {
     protected Instant tokenExpiresAt;
 
     private GameSDK(Builder builder, String apiKey) {
-        this.baseUrl = builder.baseUrl;
+        this.gameRegistryBaseUrl = builder.gameRegistryBaseUrl;
+        this.statisticsBaseUrl = builder.statisticsBaseUrl;
         this.tokenExpirationMargin = builder.tokenExpirationMargin;
         this.httpClient = builder.httpClient;
         this.objectMapper = builder.objectMapper;
@@ -70,9 +74,56 @@ public class GameSDK {
         );
     }
 
+    public boolean submitCompletedSession(
+            GameContext ctx,
+            UUID playerId,
+            LocalDateTime startTime,
+            LocalDateTime endTime,
+            EndState endState,
+            Integer turnsTaken,
+            Double avgSecondsPerTurn,
+            Integer playerScore,
+            Integer opponentScore,
+            Integer clicks,
+            String character,
+            Boolean wasFirstToGo
+    ) {
+        return SubmitCompletedSessionModule.submitCompletedSession(
+                this,
+                ctx,
+                playerId,
+                startTime,
+                endTime,
+                endState,
+                turnsTaken,
+                avgSecondsPerTurn,
+                playerScore,
+                opponentScore,
+                clicks,
+                character,
+                wasFirstToGo
+        );
+    }
+
+    public boolean updateAchievementProgress(
+            GameContext ctx,
+            UUID playerId,
+            int achievementNumber,
+            Integer newProgressAmount
+    ) {
+        return UpdateAchievementProgressModule.updateAchievementProgress(
+                this,
+                ctx,
+                playerId,
+                achievementNumber,
+                newProgressAmount
+        );
+    }
+
 
     public static class Builder {
-        private String baseUrl = "http://localhost:8090/api";
+        private String gameRegistryBaseUrl = "http://localhost:8090/api";
+        private String statisticsBaseUrl = "http://localhost:8090/api";
         private int tokenExpirationMargin = 10;
 
         private HttpClient httpClient = HttpClient.newBuilder()
@@ -82,8 +133,9 @@ public class GameSDK {
         ;
         private ObjectMapper objectMapper = new ObjectMapper();
 
-        public Builder baseUrl(String baseUrl) {
-            this.baseUrl = baseUrl;
+        public Builder baseUrl(String gameRegistryBaseUrl, String statisticsBaseUrl) {
+            this.gameRegistryBaseUrl = gameRegistryBaseUrl;
+            this.statisticsBaseUrl = statisticsBaseUrl;
             return this;
         }
 
@@ -128,5 +180,9 @@ public class GameSDK {
         public GeneralMethodFailedException(String message) {
             super(message);
         }
+    }
+
+    public enum EndState {
+        WIN, LOSS, DRAW
     }
 }
