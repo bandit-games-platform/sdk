@@ -39,7 +39,7 @@ public class UpdateAchievementProgressModule {
             }
             return true;
         }catch (IOException | InterruptedException e) {
-            throw new GameSDK.AuthenticationFailedException(e.getMessage());
+            throw new GameSDK.GeneralMethodFailedException(e.getMessage());
         }
     }
 }
