@@ -5,6 +5,8 @@ Each change should be sorted in to one of the following categories:
 
 ## [Unreleased]
 ### Added
+- updateAchievementProgress sdk method
+- submitCompletedSession sdk method
 - registerGame sdk method
 - authentication using api key to the GameSDK
 - GameSDK.Builder to build a new GameSDK object
