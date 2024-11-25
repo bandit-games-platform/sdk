@@ -13,7 +13,7 @@ public class UpdateAchievementProgressModule {
             GameSDK sdk,
             GameContext gameContext,
             UUID playerId,
-            UUID achievementId,
+            int achievementNumber,
             Integer newProgressAmount
     ) {
         String json = """
@@ -29,7 +29,7 @@ public class UpdateAchievementProgressModule {
                 .method("POST", HttpRequest.BodyPublishers.ofString(json))
                 .setHeader("Authorization", "Bearer "+sdk.bearerToken())
                 .setHeader("Content-Type", "application/json")
-                .uri(URI.create(sdk.statisticsBaseUrl+"/statistics/achievements/" + achievementId + "?playerId=" + playerId + "&gameId=" + gameContext.gameId()))
+                .uri(URI.create(sdk.statisticsBaseUrl+"/statistics/achievements/" + achievementNumber + "?playerId=" + playerId + "&gameId=" + gameContext.gameId()))
                 .build();
         try {
             HttpResponse<String> response = sdk.httpClient.send(request, HttpResponse.BodyHandlers.ofString());

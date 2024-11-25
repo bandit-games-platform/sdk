@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.math.BigDecimal;
@@ -134,7 +135,7 @@ class GameSDKIntegrationTest {
         boolean updated = sdk.updateAchievementProgress(
                 ctx,
                 UUID.fromString("94dad160-f5c8-4817-8f2d-611e1436ffcd"),
-                UUID.fromString("123e4567-e89b-12d3-a456-426614174001"),
+                1,
                 null
         );
 
@@ -152,7 +153,7 @@ class GameSDKIntegrationTest {
         boolean updated = sdk.updateAchievementProgress(
                 ctx,
                 UUID.fromString("94dad160-f5c8-4817-8f2d-611e1436ffcd"),
-                UUID.fromString("123e4567-e89b-12d3-a456-426614174002"),
+                2,
                 10
         );
 

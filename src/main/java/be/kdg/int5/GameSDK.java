@@ -108,14 +108,14 @@ public class GameSDK {
     public boolean updateAchievementProgress(
             GameContext ctx,
             UUID playerId,
-            UUID achievementId,
+            int achievementNumber,
             Integer newProgressAmount
     ) {
         return UpdateAchievementProgressModule.updateAchievementProgress(
                 this,
                 ctx,
                 playerId,
-                achievementId,
+                achievementNumber,
                 newProgressAmount
         );
     }
