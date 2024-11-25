@@ -1,12 +1,15 @@
 package be.kdg.int5;
 
+import be.kdg.int5.domain.Achievement;
 import be.kdg.int5.domain.GameContext;
+import be.kdg.int5.domain.Rule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
 import java.net.http.HttpClient;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -52,7 +55,10 @@ public class GameSDK {
             String description,
             BigDecimal price,
             String iconUrl,
-            String backgroundUrl
+            String backgroundUrl,
+            List<Rule> rules,
+            List<String> screenshots,
+            List<Achievement> achievements
     ) {
         return RegisterGameModule.registerGame(
                 this,
@@ -61,7 +67,10 @@ public class GameSDK {
                 description,
                 price,
                 iconUrl,
-                backgroundUrl
+                backgroundUrl,
+                rules,
+                screenshots,
+                achievements
         );
     }
 
