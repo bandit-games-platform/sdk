@@ -1,9 +1,16 @@
 package be.kdg.int5;
 
+import be.kdg.int5.domain.Achievement;
+import be.kdg.int5.domain.GameContext;
+import be.kdg.int5.domain.Rule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -54,5 +61,35 @@ class GameSDKIntegrationTest {
         assertFalse(sdk.bearerToken().isEmpty());
 
         System.out.println("Token: "+sdk.bearerToken());
+    }
+
+    @Test
+    void registerGameShouldCreateGameAndReturnGameContext() {
+        //Arrange
+        GameSDK sdk = new GameSDK.Builder().init("band1TBBB");
+
+        //Act
+        GameContext ctx = sdk.registerGame(
+                "Duck!",
+                "http://localhost:4242/duckgame",
+                "Duck! is the world class duck game where you must duck.",
+                BigDecimal.valueOf(0.42),
+                "http://localhost:4242/assets/duckgame/icon.svg",
+                "http://localhost:4242/assets/duckgame/cover.png",
+                Arrays.asList(
+                        new Rule(1, "You are a duck."),
+                        new Rule(2, "You must duck!")
+                ),
+                List.of("http://localhost:4242/assets/duckgame/screenshot1.png"),
+                Arrays.asList(
+                        new Achievement(101, "Ducking Duck!", "Duck for the first time."),
+                        new Achievement(240, "Is It Still Breathing?", "Stay underwater for over a minute.", 60)
+                )
+        );
+
+        //Assert
+        assertNotNull(ctx.gameId());
+
+        System.out.println("GameId: "+ctx.gameId());
     }
 }
