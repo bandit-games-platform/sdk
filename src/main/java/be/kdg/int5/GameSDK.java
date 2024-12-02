@@ -1,8 +1,6 @@
 package be.kdg.int5;
 
-import be.kdg.int5.domain.Achievement;
-import be.kdg.int5.domain.GameContext;
-import be.kdg.int5.domain.Rule;
+import be.kdg.int5.domain.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
@@ -72,6 +70,10 @@ public class GameSDK {
                 screenshots,
                 achievements
         );
+    }
+
+    public LobbyContext createLobby(GameContext ctx, UUID ownerId, int maxPlayers) {
+        return LobbyModule.createLobby(ctx, ownerId, maxPlayers);
     }
 
     public boolean submitCompletedSession(
@@ -180,9 +182,5 @@ public class GameSDK {
         public GeneralMethodFailedException(String message) {
             super(message);
         }
-    }
-
-    public enum EndState {
-        WIN, LOSS, DRAW
     }
 }

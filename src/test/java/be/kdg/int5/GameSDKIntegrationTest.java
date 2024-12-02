@@ -1,6 +1,7 @@
 package be.kdg.int5;
 
 import be.kdg.int5.domain.Achievement;
+import be.kdg.int5.domain.EndState;
 import be.kdg.int5.domain.GameContext;
 import be.kdg.int5.domain.Rule;
 import org.junit.jupiter.api.AfterEach;
@@ -8,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.math.BigDecimal;
@@ -110,7 +110,7 @@ class GameSDKIntegrationTest {
                 UUID.fromString("94dad160-f5c8-4817-8f2d-611e1436ffcd"),
                 startTime,
                 endTime,
-                GameSDK.EndState.WIN,
+                EndState.WIN,
                 20,
                 null,
                 null,
