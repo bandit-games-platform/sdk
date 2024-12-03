@@ -78,6 +78,38 @@ public class GameSDK {
         return LobbyModule.createLobby(this, ctx, ownerId, maxPlayers);
     }
 
+    public void patchLobby(LobbyContext lobby, UUID ownerId, Integer playerCount, Boolean closed) {
+        LobbyModule.patchLobby(this, lobby, ownerId, playerCount, closed);
+    }
+
+    public void changeLobbyOwner(LobbyContext lobby, UUID newOwnerId) {
+        patchLobby(lobby, newOwnerId, null, null);
+    }
+
+    public void updateLobbyPlayerCount(LobbyContext lobby, Integer playerCount) {
+        patchLobby(lobby, null, playerCount, null);
+    }
+
+    /**
+     * Closes the specified lobby, this is <b>meant to be called when the game is being started</b> (i.e. the lobby finished queueing).
+     * <br><br>
+     * Closed lobbies do not allow the owner to invite any more players and outstanding invites cannot be accepted until reopened.
+     * @param lobby the lobby context that identifies the lobby being closed
+     */
+    public void closeLobby(LobbyContext lobby) {
+        patchLobby(lobby, null, null, true);
+    }
+
+    /**
+     * Opens the specified lobby, you can call this method to reopen a lobby for queueing (e.g. after a match has concluded).
+     * <br><br>
+     * <i>Note: You do not need to call this method after creating a fresh lobby (new lobbies are open by default)</i>
+     * @param lobby the lobby context that identifies the lobby being reopened
+     */
+    public void openLobby(LobbyContext lobby) {
+        patchLobby(lobby, null, null, false);
+    }
+
     public boolean submitCompletedSession(
             GameContext ctx,
             UUID playerId,

@@ -125,6 +125,49 @@ class GameSDKIntegrationTest {
     }
 
     @Test
+    void patchLobbyShouldThrowOnNonExistentLobby() {
+        //Arrange
+        GameSDK sdk = new GameSDK.Builder().init("band1TBBB");
+
+        LobbyContext nonExistentLobby = new LobbyContext(UUID.randomUUID());
+        //Act
+        Executable test = () -> sdk.patchLobby(nonExistentLobby, null, 2, true);
+
+        //Assert
+        assertThrows(GameSDK.GeneralMethodFailedException.class, test);
+    }
+
+    @Test
+    void patchLobbyShouldNotThrowOnExistentLobby() {
+        //Arrange
+        GameSDK sdk = new GameSDK.Builder().init("band1TBBB");
+        GameContext ctx = sdk.registerGame(
+                "Lobby Test Game",
+                "",
+                "",
+                null,
+                "",
+                "",
+                new ArrayList<>(),
+                null,
+                null
+        );
+        assertNotNull(ctx.gameId());
+
+        LobbyContext lobby = sdk.createLobby(
+                ctx,
+                UUID.fromString("9f01b00e-e627-497c-975c-452451cc0b55"),
+                2
+        );
+        assertNotNull(lobby.lobbyId());
+        //Act
+        Executable test = () -> sdk.patchLobby(lobby, null, 2, true);
+
+        //Assert
+        assertDoesNotThrow(test);
+    }
+
+    @Test
     void addingSessionForPlayerForGameShouldSucceed() {
         //Arrange
         GameSDK sdk = new GameSDK.Builder().init("band1TCCC");

@@ -43,4 +43,32 @@ class LobbyModule {
             throw new GameSDK.GeneralMethodFailedException(e.getMessage());
         }
     }
+
+    protected static void patchLobby(GameSDK sdk, LobbyContext lobby, UUID ownerId, Integer playerCount, Boolean closed) {
+        String json = "{\"lobbyId\": \""+lobby.lobbyId()+"\"";
+
+        if (ownerId != null) json += ", \"ownerId\": \""+ownerId+"\"";
+        if (playerCount != null) json += ", \"currentPlayerCount\": "+playerCount;
+        if (closed != null) json += ", \"closed\": "+closed;
+
+        json += "}";
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .method("PATCH", HttpRequest.BodyPublishers.ofString(json))
+                .setHeader("Authorization", "Bearer "+sdk.bearerToken())
+                .setHeader("Content-Type", "application/json")
+                .setHeader("Accept", "application/json")
+                .uri(URI.create(sdk.gameplayBaseUrl+"/lobby"))
+                .build();
+        try {
+            HttpResponse<String> response = sdk.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if(response.statusCode() != 200) {
+                if (response.statusCode() == 403) throw new GameSDK.AuthenticationFailedException();
+                throw new GameSDK.GeneralMethodFailedException("Non-OK response status code: "+response.statusCode());
+            }
+        }catch (IOException | InterruptedException e) {
+            throw new GameSDK.GeneralMethodFailedException(e.getMessage());
+        }
+    }
 }

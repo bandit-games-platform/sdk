@@ -5,6 +5,11 @@ Each change should be sorted in to one of the following categories:
 
 ## [Unreleased]
 ### Added
+- changeLobbyOwner sdk method
+- updateLobbyPlayerCount sdk method
+- closeLobby sdk method
+- openLobby sdk method
+- patchLobby sdk method
 - createLobby sdk method
 - updateAchievementProgress sdk method
 - submitCompletedSession sdk method
