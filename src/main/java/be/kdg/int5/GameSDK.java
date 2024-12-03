@@ -15,6 +15,7 @@ public class GameSDK {
     protected final String apiKey;
     protected final String gameRegistryBaseUrl;
     protected final String statisticsBaseUrl;
+    protected final String gameplayBaseUrl;
     protected final int tokenExpirationMargin;
 
     protected final HttpClient httpClient;
@@ -26,6 +27,7 @@ public class GameSDK {
     private GameSDK(Builder builder, String apiKey) {
         this.gameRegistryBaseUrl = builder.gameRegistryBaseUrl;
         this.statisticsBaseUrl = builder.statisticsBaseUrl;
+        this.gameplayBaseUrl = builder.gameplayBaseUrl;
         this.tokenExpirationMargin = builder.tokenExpirationMargin;
         this.httpClient = builder.httpClient;
         this.objectMapper = builder.objectMapper;
@@ -73,7 +75,7 @@ public class GameSDK {
     }
 
     public LobbyContext createLobby(GameContext ctx, UUID ownerId, int maxPlayers) {
-        return LobbyModule.createLobby(ctx, ownerId, maxPlayers);
+        return LobbyModule.createLobby(this, ctx, ownerId, maxPlayers);
     }
 
     public boolean submitCompletedSession(
@@ -126,6 +128,7 @@ public class GameSDK {
     public static class Builder {
         private String gameRegistryBaseUrl = "http://localhost:8090/api";
         private String statisticsBaseUrl = "http://localhost:8090/api";
+        private String gameplayBaseUrl = "http://localhost:8090/api";
         private int tokenExpirationMargin = 10;
 
         private HttpClient httpClient = HttpClient.newBuilder()
@@ -135,9 +138,35 @@ public class GameSDK {
         ;
         private ObjectMapper objectMapper = new ObjectMapper();
 
-        public Builder baseUrl(String gameRegistryBaseUrl, String statisticsBaseUrl) {
-            this.gameRegistryBaseUrl = gameRegistryBaseUrl;
-            this.statisticsBaseUrl = statisticsBaseUrl;
+        /**
+         * Will set all context specific base urls to <b>a single general base url</b> (useful when hosted as monolith).
+         * <br><br>
+         * Use the context specific builder methods when finer control is desired. (i.e. when hosted as microservices).
+         * @param generalBaseUrl The general url all the contexts are hosted on
+         * @return the builder
+         * @see #gameRegistryBaseUrl(String)
+         * @see #statisticsBaseUrl(String)
+         * @see #gameplayBaseUrl(String)
+         */
+        public Builder baseUrl(String generalBaseUrl) {
+            this.gameRegistryBaseUrl = generalBaseUrl;
+            this.statisticsBaseUrl = generalBaseUrl;
+            this.gameplayBaseUrl = generalBaseUrl;
+            return this;
+        }
+
+        public Builder gameRegistryBaseUrl(String baseUrl) {
+            this.gameRegistryBaseUrl = baseUrl;
+            return this;
+        }
+
+        public Builder statisticsBaseUrl(String baseUrl) {
+            this.statisticsBaseUrl = baseUrl;
+            return this;
+        }
+
+        public Builder gameplayBaseUrl(String baseUrl) {
+            this.gameRegistryBaseUrl = baseUrl;
             return this;
         }
 

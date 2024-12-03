@@ -1,15 +1,13 @@
 package be.kdg.int5;
 
-import be.kdg.int5.domain.Achievement;
-import be.kdg.int5.domain.EndState;
-import be.kdg.int5.domain.GameContext;
-import be.kdg.int5.domain.Rule;
+import be.kdg.int5.domain.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -94,6 +92,36 @@ class GameSDKIntegrationTest {
         assertNotNull(ctx.gameId());
 
         System.out.println("GameId: "+ctx.gameId());
+    }
+
+    @Test
+    void createLobbyShouldReturnLobbyContextOnSuccess() {
+        //Arrange
+        GameSDK sdk = new GameSDK.Builder().init("band1TBBB");
+        GameContext ctx = sdk.registerGame(
+                "Lobby Test Game",
+                "",
+                "",
+                null,
+                "",
+                "",
+                new ArrayList<>(),
+                null,
+                null
+        );
+        assertNotNull(ctx.gameId());
+
+        //Act
+        LobbyContext lobby = sdk.createLobby(
+                ctx,
+                UUID.fromString("9f01b00e-e627-497c-975c-452451cc0b55"),
+                2
+        );
+
+        //Assert
+        assertNotNull(lobby.lobbyId());
+
+        System.out.println("LobbyId: "+lobby.lobbyId());
     }
 
     @Test
