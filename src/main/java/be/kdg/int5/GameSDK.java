@@ -198,7 +198,7 @@ public class GameSDK {
         }
 
         public Builder gameplayBaseUrl(String baseUrl) {
-            this.gameRegistryBaseUrl = baseUrl;
+            this.gameplayBaseUrl = baseUrl;
             return this;
         }
 
