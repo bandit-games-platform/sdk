@@ -8,8 +8,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.UUID;
 
-public class UpdateAchievementProgressModule {
-    public static boolean updateAchievementProgress(
+class UpdateAchievementProgressModule {
+    protected static boolean updateAchievementProgress(
             GameSDK sdk,
             GameContext gameContext,
             UUID playerId,

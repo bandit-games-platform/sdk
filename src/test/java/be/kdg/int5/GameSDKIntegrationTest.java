@@ -1,15 +1,13 @@
 package be.kdg.int5;
 
-import be.kdg.int5.domain.Achievement;
-import be.kdg.int5.domain.GameContext;
-import be.kdg.int5.domain.Rule;
+import be.kdg.int5.domain.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.UUID;
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -97,6 +95,79 @@ class GameSDKIntegrationTest {
     }
 
     @Test
+    void createLobbyShouldReturnLobbyContextOnSuccess() {
+        //Arrange
+        GameSDK sdk = new GameSDK.Builder().init("band1TBBB");
+        GameContext ctx = sdk.registerGame(
+                "Lobby Test Game",
+                "",
+                "",
+                null,
+                "",
+                "",
+                new ArrayList<>(),
+                null,
+                null
+        );
+        assertNotNull(ctx.gameId());
+
+        //Act
+        LobbyContext lobby = sdk.createLobby(
+                ctx,
+                UUID.fromString("9f01b00e-e627-497c-975c-452451cc0b55"),
+                2
+        );
+
+        //Assert
+        assertNotNull(lobby.lobbyId());
+
+        System.out.println("LobbyId: "+lobby.lobbyId());
+    }
+
+    @Test
+    void patchLobbyShouldThrowOnNonExistentLobby() {
+        //Arrange
+        GameSDK sdk = new GameSDK.Builder().init("band1TBBB");
+
+        LobbyContext nonExistentLobby = new LobbyContext(UUID.randomUUID());
+        //Act
+        Executable test = () -> sdk.patchLobby(nonExistentLobby, null, 2, true);
+
+        //Assert
+        assertThrows(GameSDK.GeneralMethodFailedException.class, test);
+    }
+
+    @Test
+    void patchLobbyShouldNotThrowOnExistentLobby() {
+        //Arrange
+        GameSDK sdk = new GameSDK.Builder().init("band1TBBB");
+        GameContext ctx = sdk.registerGame(
+                "Lobby Test Game",
+                "",
+                "",
+                null,
+                "",
+                "",
+                new ArrayList<>(),
+                null,
+                null
+        );
+        assertNotNull(ctx.gameId());
+
+        LobbyContext lobby = sdk.createLobby(
+                ctx,
+                UUID.fromString("9f01b00e-e627-497c-975c-452451cc0b55"),
+                2
+        );
+        assertNotNull(lobby.lobbyId());
+        //Act
+        Executable test = () -> sdk.patchLobby(lobby, null, 2, true);
+
+        //Assert
+        assertDoesNotThrow(test);
+    }
+
+    @Test
     void addingSessionForPlayerForGameShouldSucceed() {
         //Arrange
         GameSDK sdk = new GameSDK.Builder().init("band1TCCC");
@@ -110,7 +181,7 @@ class GameSDKIntegrationTest {
                 UUID.fromString("94dad160-f5c8-4817-8f2d-611e1436ffcd"),
                 startTime,
                 endTime,
-                GameSDK.EndState.WIN,
+                EndState.WIN,
                 20,
                 null,
                 null,

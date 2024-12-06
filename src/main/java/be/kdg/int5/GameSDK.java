@@ -1,8 +1,6 @@
 package be.kdg.int5;
 
-import be.kdg.int5.domain.Achievement;
-import be.kdg.int5.domain.GameContext;
-import be.kdg.int5.domain.Rule;
+import be.kdg.int5.domain.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.math.BigDecimal;
@@ -17,6 +15,7 @@ public class GameSDK {
     protected final String apiKey;
     protected final String gameRegistryBaseUrl;
     protected final String statisticsBaseUrl;
+    protected final String gameplayBaseUrl;
     protected final int tokenExpirationMargin;
 
     protected final HttpClient httpClient;
@@ -28,6 +27,7 @@ public class GameSDK {
     private GameSDK(Builder builder, String apiKey) {
         this.gameRegistryBaseUrl = builder.gameRegistryBaseUrl;
         this.statisticsBaseUrl = builder.statisticsBaseUrl;
+        this.gameplayBaseUrl = builder.gameplayBaseUrl;
         this.tokenExpirationMargin = builder.tokenExpirationMargin;
         this.httpClient = builder.httpClient;
         this.objectMapper = builder.objectMapper;
@@ -72,6 +72,42 @@ public class GameSDK {
                 screenshots,
                 achievements
         );
+    }
+
+    public LobbyContext createLobby(GameContext ctx, UUID ownerId, int maxPlayers) {
+        return LobbyModule.createLobby(this, ctx, ownerId, maxPlayers);
+    }
+
+    public void patchLobby(LobbyContext lobby, UUID ownerId, Integer playerCount, Boolean closed) {
+        LobbyModule.patchLobby(this, lobby, ownerId, playerCount, closed);
+    }
+
+    public void changeLobbyOwner(LobbyContext lobby, UUID newOwnerId) {
+        patchLobby(lobby, newOwnerId, null, null);
+    }
+
+    public void updateLobbyPlayerCount(LobbyContext lobby, Integer playerCount) {
+        patchLobby(lobby, null, playerCount, null);
+    }
+
+    /**
+     * Closes the specified lobby, this is <b>meant to be called when the game is being started</b> (i.e. the lobby finished queueing).
+     * <br><br>
+     * Closed lobbies do not allow the owner to invite any more players and outstanding invites cannot be accepted until reopened.
+     * @param lobby the lobby context that identifies the lobby being closed
+     */
+    public void closeLobby(LobbyContext lobby) {
+        patchLobby(lobby, null, null, true);
+    }
+
+    /**
+     * Opens the specified lobby, you can call this method to reopen a lobby for queueing (e.g. after a match has concluded).
+     * <br><br>
+     * <i>Note: You do not need to call this method after creating a fresh lobby (new lobbies are open by default)</i>
+     * @param lobby the lobby context that identifies the lobby being reopened
+     */
+    public void openLobby(LobbyContext lobby) {
+        patchLobby(lobby, null, null, false);
     }
 
     public boolean submitCompletedSession(
@@ -124,6 +160,7 @@ public class GameSDK {
     public static class Builder {
         private String gameRegistryBaseUrl = "http://localhost:8090/api";
         private String statisticsBaseUrl = "http://localhost:8090/api";
+        private String gameplayBaseUrl = "http://localhost:8090/api";
         private int tokenExpirationMargin = 10;
 
         private HttpClient httpClient = HttpClient.newBuilder()
@@ -133,9 +170,35 @@ public class GameSDK {
         ;
         private ObjectMapper objectMapper = new ObjectMapper();
 
-        public Builder baseUrl(String gameRegistryBaseUrl, String statisticsBaseUrl) {
-            this.gameRegistryBaseUrl = gameRegistryBaseUrl;
-            this.statisticsBaseUrl = statisticsBaseUrl;
+        /**
+         * Will set all context specific base urls to <b>a single general base url</b> (useful when hosted as monolith).
+         * <br><br>
+         * Use the context specific builder methods when finer control is desired. (i.e. when hosted as microservices).
+         * @param generalBaseUrl The general url all the contexts are hosted on
+         * @return the builder
+         * @see #gameRegistryBaseUrl(String)
+         * @see #statisticsBaseUrl(String)
+         * @see #gameplayBaseUrl(String)
+         */
+        public Builder baseUrl(String generalBaseUrl) {
+            this.gameRegistryBaseUrl = generalBaseUrl;
+            this.statisticsBaseUrl = generalBaseUrl;
+            this.gameplayBaseUrl = generalBaseUrl;
+            return this;
+        }
+
+        public Builder gameRegistryBaseUrl(String baseUrl) {
+            this.gameRegistryBaseUrl = baseUrl;
+            return this;
+        }
+
+        public Builder statisticsBaseUrl(String baseUrl) {
+            this.statisticsBaseUrl = baseUrl;
+            return this;
+        }
+
+        public Builder gameplayBaseUrl(String baseUrl) {
+            this.gameplayBaseUrl = baseUrl;
             return this;
         }
 
@@ -180,9 +243,5 @@ public class GameSDK {
         public GeneralMethodFailedException(String message) {
             super(message);
         }
-    }
-
-    public enum EndState {
-        WIN, LOSS, DRAW
     }
 }

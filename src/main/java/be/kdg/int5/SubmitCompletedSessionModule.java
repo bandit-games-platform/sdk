@@ -1,5 +1,6 @@
 package be.kdg.int5;
 
+import be.kdg.int5.domain.EndState;
 import be.kdg.int5.domain.GameContext;
 
 import java.io.IOException;
@@ -7,18 +8,17 @@ import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-public class SubmitCompletedSessionModule {
+class SubmitCompletedSessionModule {
     protected static boolean submitCompletedSession(
             GameSDK sdk,
             GameContext gameContext,
             UUID playerId,
             LocalDateTime startTime,
             LocalDateTime endTime,
-            GameSDK.EndState endState,
+            EndState endState,
             Integer turnsTaken,
             Double avgSecondsPerTurn,
             Integer playerScore,
