@@ -4,6 +4,8 @@ Each change should be sorted in to one of the following categories:
 “Added”, “Changed”, “Deprecated”, “Removed”, “Fixed”
 
 ## [Unreleased]
+
+## [v1.0.0] - 07/12/2024
 ### Added
 - changeLobbyOwner sdk method
 - updateLobbyPlayerCount sdk method
