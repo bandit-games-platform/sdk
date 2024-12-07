@@ -28,9 +28,8 @@ create_release:
   script:
     - cat job_id.txt
     - cat jar_file.txt
-    - echo "BUILD_JOB_ID=$(cat job_id.txt)" >> $GITLAB_ENV
-    - echo "JAR_FILE=$(cat jar_file.txt)" >> $GITLAB_ENV
-    - echo $GITLAB_ENV
+    - echo "BUILD_JOB_ID=$(cat job_id.txt) JAR_FILE=$(cat jar_file.txt)" >> $GITLAB_ENV
+    - cat $GITLAB_ENV
     - echo "Creating a release for tag $CI_COMMIT_TAG"
   release:
     name: "Release $CI_COMMIT_TAG"
