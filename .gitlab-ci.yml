@@ -1,12 +1,10 @@
-default:
-  image: eclipse-temurin:21-jdk-alpine
-
 stages:
   - build
   - release
 
 build_jar:
   stage: build
+  image: eclipse-temurin:21-jdk-alpine
   rules:
     - if: $CI_COMMIT_TAG
   script:
@@ -20,6 +18,7 @@ build_jar:
 
 create_release:
   stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
   rules:
     - if: $CI_COMMIT_TAG
   script:
