@@ -5,6 +5,10 @@ Each change should be sorted in to one of the following categories:
 
 ## [Unreleased]
 
+## [v1.1.0] - 09/01/2025
+### Changed
+- Default URL's changed to match the new platform URL's
+
 ## [v1.0.0] - 07/12/2024
 ### Added
 - changeLobbyOwner sdk method

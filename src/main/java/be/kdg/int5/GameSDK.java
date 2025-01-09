@@ -158,9 +158,9 @@ public class GameSDK {
 
 
     public static class Builder {
-        private String gameRegistryBaseUrl = "http://localhost:8090/api";
-        private String statisticsBaseUrl = "http://localhost:8090/api";
-        private String gameplayBaseUrl = "http://localhost:8090/api";
+        private String gameRegistryBaseUrl = "https://game-registry-prod-container.blackwave-a5cb5824.northeurope.azurecontainerapps.io/game-registry";
+        private String statisticsBaseUrl = "https://statistics-prod-container.blackwave-a5cb5824.northeurope.azurecontainerapps.io/statistics";
+        private String gameplayBaseUrl = "https://gameplay-prod-container.blackwave-a5cb5824.northeurope.azurecontainerapps.io/gameplay";
         private int tokenExpirationMargin = 10;
 
         private HttpClient httpClient = HttpClient.newBuilder()
